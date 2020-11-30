@@ -13,6 +13,9 @@ const WeatherDisplay = ()  => {
       "list": [
         {
           "dt": 1606734000,
+          "temp": {
+            max: 0
+          },
           "weather": [
             {"main": "",}
           ]
@@ -29,7 +32,7 @@ const WeatherDisplay = ()  => {
 
     useEffect(() => {
       if (queryCity !== ""){
-      fetch(`https://community-open-weather-map.p.rapidapi.com/forecast/daily?q=${queryCity}&lat=35&lon=139&cnt=3&units=metric%20or%20imperial`, {
+      fetch(`https://community-open-weather-map.p.rapidapi.com/forecast/daily?q=${queryCity}&lat=35&lon=139&cnt=3&units=metric`, {
           "method": "GET",
           "headers": {
             "x-rapidapi-key": ApiKey,
@@ -46,7 +49,7 @@ const WeatherDisplay = ()  => {
     }} , [queryCity])
 
 
-    const dayWeather = weather.list.map((day) => {
+    const dayWeather = weather.list.map((day, index) => {
 
       const weatherDate = new Date(day.dt * 1000)
       const formattedWeatherDate = weatherDate.toLocaleDateString("en-UK", {
@@ -54,11 +57,15 @@ const WeatherDisplay = ()  => {
           month: "short",
       })
 
+      const displayTemprature = Math.floor(day.temp.max)
+
       return (
             <WeatherCards 
-              image="http://via.placeholder.com/356x200.png"
+              image={`http://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png`}
               title={formattedWeatherDate}
-              description={day.weather[0].main}
+              temperature={`${displayTemprature}°C`}
+              description={`${day.weather[0].main} (${day.weather[0].description})`}
+              key={index}
             />
       )
 
@@ -76,7 +83,7 @@ const WeatherDisplay = ()  => {
         </form>
         { showResults && (
           <div>
-            <h1>{queryCity}</h1>
+            <h1>{weatherCityName}</h1>
             <div className="weather-cards-container">
               {dayWeather}
             </div>

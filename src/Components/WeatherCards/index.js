@@ -10,6 +10,7 @@ const WeatherCards = (props) => {
                 alt="Avatar" 
             />
             <div className="card-description-container">
+                <h2>{props.temperature}</h2>
                 <h4>{props.title}</h4> 
                 <div className="card-description-content">{props.description}</div>
             </div>
