@@ -1,3 +1,4 @@
+import WeatherCards from 'Components/WeatherCards';
 import React, {useEffect, useState} from 'react'
 // API Key
 import ApiKey from '../../Key/ApiKey';
@@ -5,9 +6,21 @@ import ApiKey from '../../Key/ApiKey';
 const WeatherDisplay = ()  => {
 
     const [queryCity, setQueryCity] = useState("")
-    const [queryCountry, setQueryCountry] = useState("")
-    const [weather, setWeather] = useState({})
+    const [weather, setWeather] = useState({
+      "city": {
+        "name": "",
+      },
+      "list": [
+        {
+          "dt": 1606734000,
+          "weather": [
+            {"main": "",}
+          ]
+        }
+      ]
+    })
     const [weatherCityName, setWeatherCityName] = useState()
+    const [showResults, setShowResults] = useState(false)
 
     const getWeather = data => {
       data.preventDefault()
@@ -15,7 +28,8 @@ const WeatherDisplay = ()  => {
     }
 
     useEffect(() => {
-      fetch(`https://community-open-weather-map.p.rapidapi.com/forecast/daily?q=${queryCity}&lat=35&lon=139&cnt=5&units=metric%20or%20imperial`, {
+      if (queryCity !== ""){
+      fetch(`https://community-open-weather-map.p.rapidapi.com/forecast/daily?q=${queryCity}&lat=35&lon=139&cnt=3&units=metric%20or%20imperial`, {
           "method": "GET",
           "headers": {
             "x-rapidapi-key": ApiKey,
@@ -25,9 +39,11 @@ const WeatherDisplay = ()  => {
       .then(response => response.json())
       .then(weatherData => {
         setWeather(weatherData)
+        setWeatherCityName(weatherData.city["name"])
+        setShowResults(true)
       })
       .catch(err => console.log(err))
-    }, [queryCity, queryCountry])
+    }} , [queryCity])
 
 
     const dayWeather = weather.list.map((day) => {
@@ -39,10 +55,11 @@ const WeatherDisplay = ()  => {
       })
 
       return (
-          <div>
-              <h3>weather: {day.weather[0].main}</h3>
-              <p>{formattedWeatherDate}</p>
-          </div>
+            <WeatherCards 
+              image="http://via.placeholder.com/356x200.png"
+              title={formattedWeatherDate}
+              description={day.weather[0].main}
+            />
       )
 
     })
@@ -57,8 +74,15 @@ const WeatherDisplay = ()  => {
             className="city-search"
           />
         </form>
-        <h1>{queryCity}</h1>
-        {dayWeather}
+        { showResults && (
+          <div>
+            <h1>{queryCity}</h1>
+            <div className="weather-cards-container">
+              {dayWeather}
+            </div>
+          </div>
+          )
+        }
       </div>
     );
 

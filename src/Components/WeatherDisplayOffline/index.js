@@ -5,7 +5,6 @@ const WeatherDisplayOffline = () => {
 
     const weatherCityName = weatherData.city.name
 
-
     const dayWeather = weatherData.list.map((day) => {
 
         const weatherDate = new Date(day.dt * 1000)
