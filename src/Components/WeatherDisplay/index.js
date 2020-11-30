@@ -7,10 +7,11 @@ const WeatherDisplay = ()  => {
     const [queryCity, setQueryCity] = useState("")
     const [queryCountry, setQueryCountry] = useState("")
     const [weather, setWeather] = useState({})
+    const [weatherCityName, setWeatherCityName] = useState()
 
     const getWeather = data => {
       data.preventDefault()
-      setQueryCity(document.getElementById("city-country").value)
+      setQueryCity(document.getElementById("city").value)
     }
 
     useEffect(() => {
@@ -28,7 +29,23 @@ const WeatherDisplay = ()  => {
       .catch(err => console.log(err))
     }, [queryCity, queryCountry])
 
-    console.log(weather)
+
+    const dayWeather = weather.list.map((day) => {
+
+      const weatherDate = new Date(day.dt * 1000)
+      const formattedWeatherDate = weatherDate.toLocaleDateString("en-UK", {
+          day: "2-digit",
+          month: "short",
+      })
+
+      return (
+          <div>
+              <h3>weather: {day.weather[0].main}</h3>
+              <p>{formattedWeatherDate}</p>
+          </div>
+      )
+
+    })
 
     return (
       <div className="App">
@@ -36,11 +53,12 @@ const WeatherDisplay = ()  => {
         <p>Enter the city name to get your forecast!</p>
         <form onSubmit={getWeather}>
           <input 
-            id="city-country" 
-            className=""
+            id="city" 
+            className="city-search"
           />
         </form>
         <h1>{queryCity}</h1>
+        {dayWeather}
       </div>
     );
 
