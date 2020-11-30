@@ -32,7 +32,7 @@ const WeatherDisplay = ()  => {
 
     useEffect(() => {
       if (queryCity !== ""){
-      fetch(`https://community-open-weather-map.p.rapidapi.com/forecast/daily?q=${queryCity}&lat=35&lon=139&cnt=3&units=metric`, {
+      fetch(`https://community-open-weather-map.p.rapidapi.com/forecast/daily?q=${queryCity}&lat=35&lon=139&cnt=5&units=metric`, {
           "method": "GET",
           "headers": {
             "x-rapidapi-key": ApiKey,
